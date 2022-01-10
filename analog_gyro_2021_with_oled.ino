@@ -17,7 +17,7 @@
   http://blog.livedoor.jp/revolution_include/archives/2815979.html
 */
 
-#define DEBUG
+//#define DEBUG
 
 #ifdef DEBUG
 #define DEBUG_PRINTLN(x) Serial.println(x)
@@ -48,6 +48,7 @@
 // Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
 #define OLED_RESET     4 // Reset pin # (or -1 if sharing Arduino reset pin)
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+int c = 0;
 
 //PIN設定
 #define LED_RIGHT 13
@@ -127,7 +128,6 @@ void setup()
   DEBUG_PRINTLN("Start...");
 }
 
-int c = 0;
 void loop()
 {
   if (digitalRead(PIN_SW) == HIGH) {
@@ -166,12 +166,10 @@ void loop()
     } else {
       digitalWrite(LED_RIGHT, LOW);
     }
-
     if (c % 10 == 0) {
       draw_triangle(mydeg);
     }
     c++;
-
   } else if (tm_reset == 0 && tm_calib == 0) {
     //スイッチ押し時間計測開始
     tm_reset = millis();
@@ -234,6 +232,8 @@ void init_gyro()
 {
   int val;
   mpu.initialize();
+  while (!mpu.testConnection()) {
+  }
   if (mpu.testConnection() != true) {
     DEBUG_PRINTLN("MPU disconection");
     while (true) {}
@@ -297,7 +297,6 @@ void action_calibration()
   Wire.begin();
   TWBR = 24; // 400kHz I2C clock (200kHz if CPU is 8MHz). Leonardo measured 250kHz.
   accelgyro.initialize();
-
   while (1) {
     if (state == 0) {
       DEBUG_PRINTLN("\nReading sensors for first time...");
@@ -354,7 +353,6 @@ void meansensors()
   long buff_ax = 0, buff_ay = 0, buff_az = 0;
   long buff_gx = 0, buff_gy = 0, buff_gz = 0;
   int x = -1, x2 = -1;
-
   display.fillRect(0, 10, display.width(), display.height(), SSD1306_BLACK);
   display.display();
   display.setCursor(0, 10);
@@ -381,7 +379,6 @@ void meansensors()
     }
     i++;
     delay(2); //Needed so we don't get repeated measures
-
     x = map(i, 0, buffersize + 100, 0, 127);
     if (x != x2) {
       display.drawLine(x, 20, x, 29, WHITE);
@@ -399,7 +396,6 @@ void calibration()
   gx_offset = -mean_gx / 4;
   gy_offset = -mean_gy / 4;
   gz_offset = -mean_gz / 4;
-
   display.fillRect(0, 10, display.width(), display.height(), SSD1306_BLACK);
   display.display();
   display.setCursor(0, 10);
@@ -448,7 +444,6 @@ void calibration()
     } else {
       gz_offset = gz_offset - mean_gz / (giro_deadzone + 1);
     }
-
     if (before_ready != ready) {
       display.setCursor(0, 20);
       if (ready == 1) {
@@ -471,7 +466,6 @@ void calibration()
     }
   }
 }
-
 
 //OLEDに三角描画
 void draw_triangle(int16_t deg)

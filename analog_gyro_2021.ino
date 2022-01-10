@@ -1,20 +1,20 @@
 /**
-Analog出力ジャイロ
-2021-12-27 by ohguma
+  Analog出力ジャイロ
+  2021-12-27 by ohguma
 
-▼パーツ
-DAC          MCP4726 秋月
-ジャイロセンサ MPU6050 Amazonなど
+  ▼パーツ
+  DAC          MCP4726 秋月
+  ジャイロセンサ MPU6050 Amazonなど
 
-▼ピン設定
-入力
-　基準向きリセットSW   A3
-出力
-　向き表示LED1,2,3    D11,D12,D13
+  ▼ピン設定
+  入力
+  　基準向きリセットSW   A3
+  出力
+  　向き表示LED1,2,3    D11,D12,D13
 
-▼参考
-センサーの使い方(ジャイロ編)
-http://blog.livedoor.jp/revolution_include/archives/2815979.html
+  ▼参考
+  センサーの使い方(ジャイロ編)
+  http://blog.livedoor.jp/revolution_include/archives/2815979.html
 */
 
 //#define DEBUG
@@ -196,6 +196,8 @@ void init_gyro()
 {
   int val;
   mpu.initialize();
+  while (!mpu.testConnection()) {
+  }
   if (mpu.testConnection() != true) {
     DEBUG_PRINTLN("MPU disconection");
     while (true) {}
@@ -308,7 +310,7 @@ void meansensors()
   long i = 0;
   long buff_ax = 0, buff_ay = 0, buff_az = 0;
   long buff_gx = 0, buff_gy = 0, buff_gz = 0;
- 
+
   while (i < (buffersize + 101)) {
     // read raw accel/gyro measurements from device
     accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
