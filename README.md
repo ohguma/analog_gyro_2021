@@ -55,5 +55,7 @@
 + [GerberPanelizer.exeデータ](./pcb/gyro_328p_6050_2021_panelize.gerberset)
 + [Frizingのプリント基板外形SVG](./pcb/gyro_328p_6050_2021.svg)
 
++ [KiCAD8データ](./pcb/analog_gyro_2021.zip)
+
 ----
 2021-12-29 ohguma
